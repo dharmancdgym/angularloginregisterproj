@@ -16,12 +16,16 @@ export class UserService {
   }
 
   validate(username: string, password: string): Observable<boolean> {
-    return this.getUsers().pipe(
-      map(users => {
+    return new Observable<boolean>(observer => {
+      this.getUsers().subscribe(users => {
         const user = users.find(user => user.username === username && user.password === password);
-        return !!user;
-      })
-    );
+        observer.next(!!user);
+        observer.complete();
+      }, error => {
+        observer.next(false);
+        observer.complete();
+      });
+    });
   }
 
   register(username: string, password: string): Observable<void> {
