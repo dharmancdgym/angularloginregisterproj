@@ -20,11 +20,14 @@ export class LoginComponent {
   constructor(private userService: UserService, private router: Router) {}
 
   onSubmit() {
-    if (this.userService.validate(this.username, this.password)) {
-      window.location.href = 'https://www.google.com/';
-    } else {
-      this.errorMessage = 'Invalid username or password';
-    }
+    console.log("onSubmit: " + this.username);
+    this.userService.validate(this.username, this.password).subscribe(isValid => {
+      if (isValid) {
+        window.location.href = 'https://www.google.com/';
+      } else {
+        this.errorMessage = 'Invalid username or password';
+      }
+    });
   }
 
   navigateToRegister() {
