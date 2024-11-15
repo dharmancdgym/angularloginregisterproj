@@ -27,9 +27,17 @@ export class UserService {
       });
     });
   }
+  
 
   register(username: string, password: string): Observable<void> {
     const newUser = { username, password };
-    return this.http.post<void>(this.usersUrl, newUser);
+    return new Observable<void>(observer => {
+      this.http.post<{ message: string }>(this.usersUrl, newUser).subscribe(() => {
+        observer.next();
+        observer.complete();
+      }, error => {
+        observer.error(error);
+      });
+    });
   }
 }

@@ -19,16 +19,14 @@ export class RegistrationComponent {
 
   constructor(private userService: UserService, private router: Router) {}
 
-  onSubmit() {
+  async onSubmit() {
     if (this.username && this.password && this.email) {
-      this.userService.register(this.username, this.password).subscribe(
-        () => {
-          this.router.navigate(['/']);
-        },
-        (error) => {
-          this.errorMessage = 'Registration failed. Please try again.';
-        }
-      );
+      try {
+        await this.userService.register(this.username, this.password).toPromise();
+        this.router.navigate(['/']);
+      } catch (error) {
+        this.errorMessage = 'Registration failed. Please try again.';
+      }
     } else {
       this.errorMessage = 'All fields are required';
     }
